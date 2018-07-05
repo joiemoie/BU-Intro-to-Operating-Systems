@@ -1,0 +1,27 @@
+Some things to note:
+When deciding the number of pages, you need
+to round up. For example, if you have
+only half a page filled, you still need 1 
+full page.
+
+Implementation was a matter of creating
+the TLS struct, page struct, and hash element struct.
+The hash table works in the form of a linked list.
+To find a pthread, I just keep searching through the list
+until I find it.
+
+Initialization initializes page size, hash table,
+and segfault flags.
+
+tls_create is essentially allocating memory and
+adding the tls to the linked list while destroy frees the memory.
+
+tls_read straightforwardly selects the page and reads characters
+into the buffer. Protect and unprotect is needed to modify the mmap.
+
+tls_write straightforwardly writes from the buffer. Major thing to note is that
+if the clone exists, it makes a copy of the page being modified 
+then further modifies that page. All other pages remain intact.
+
+tls_clone makes a new tls except retains all the original
+page links.

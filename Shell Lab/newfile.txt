@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(){
+  int isMetaChar = 0; // is the current character a meta character?
+  int isCommand = 1; // will the current word be a command or argument?
+  int commandTyped = 0; // has a command been typed?
+  char str[512]; // initialized size of input buffer
+  
+  scanf("%[^\n]s", str); //readas the user input
+  char * it; // pointer that iterates through the input buffer
+  it = &str[0];
+  
+  //iterating through each character in the input
+  for (int i = 0; i < strlen(str); i++)
+  {
+    // Checks if the current character is a meta character
+    if ((*it) == ' ' ||(*it) == '|' ||(*it) == '<' ||(*it) == '>' || (*it) == '&') {
+      //If the last character was not a meta character, it is the end of either a command or argument
+      if (!isMetaChar) {			
+        if (isCommand) printf(" - command%c", '\n');
+        else printf(" - argument%c", '\n');
+      }
+      // Sets the next token as either a command or argument
+      if ((*it) != ' ') {
+        isCommand = 1;
+        commandTyped = 0;
+      }
+      isMetaChar = 1;
+    }
+    
+    // Meta Characters
+    if ((*it) == ' ') {
+      if (commandTyped) isCommand = 0;
+      isMetaChar = 1;
+    }
+    else if ((*it) == '|') printf("%c - pipe \n",(*it));
+    else if ((*it) == '<') printf("%c - input redirect\n",(*it));
+    else if ((*it) == '>') printf("%c - output redirect\n",(*it));
+    else if ((*it) == '&') printf("%c - background\n",(*it));
+    // Non-meta characters
+    else {
+      printf ("%c", (*it));
+      // Checks the end of the input buffer
+      if (i == strlen(str) - 1) {
+        if (isCommand) printf(" - command%c", '\n');
+        else printf(" - argument%c", '\n');
+      }
+      isMetaChar = 0;
+      commandTyped = 1;
+    }
+    it++;
+  }
+  return 0;
+}

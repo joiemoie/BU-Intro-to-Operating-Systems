@@ -1,0 +1,8 @@
+The following adder was created based on a template of chardev.
+
+It sets the major to 200 using register_chrdev and assigns certain file operations such as open, close, read and write.
+
+In this implementation, it reads character by character. Whenever the read call
+encounters whitespace, it parses the string and turns it into a number. The number is added to the running sum.
+The way to check for a single reader and writer is using two boolean flags. These flags are set to one at the beginning
+of a read/write call then zero at the end of the function. IF another reader/writer tries to read/write, it returns an error code.

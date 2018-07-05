@@ -1,0 +1,13 @@
+I used sigprocmask to block the signals coming from SIGALRM.
+Then I restored the old mask to unblock the signals.
+
+For pthread_join, I set the value of the executing thread to BLOCKED.
+I also set the value of the thread to join as READY in case it completed early.
+
+I modified pthread_exit so that when it exits, it selects thread that called to join and sets it as READY.
+I also move the *value_ptr to the join calling thread.
+
+For semaphore implementation, I make the semaphore extension static because I could not get the malloc call to work.
+For sem_wait, I add the a thread to the tail of a queue and block if the current value is 0.
+For sem_post, I set the head of the queue to ready and move the head up if the value is greater than 0.
+Because the semaphore variables are static rather than dynamically allocated, the sem_destroy call does nothing.
